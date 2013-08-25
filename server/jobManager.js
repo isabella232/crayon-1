@@ -39,7 +39,10 @@ JobManager.prototype.secondPassed = function(now) {
 		cpuCounter = cpuCounter || countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "Crayon Host CPU", "crayon", null, true);
 		rawRemainingRamCounter = rawRemainingRamCounter || countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "Remaining Raw RAM", "crayon", null, true);
 
+		//TODO:REVIEW system information and operation functions should be extracted to a separate module and at some point replaced with cross platform modules.
+		
 		try {
+				//TODO:REVIEW sar should be listed as a dependency in the readme. On ubuntu, you need to follow this procedure - http://www.leonardoborda.com/blog/how-to-configure-sysstatsar-on-ubuntudebian/
 			exec("sar -u 1 1 | tail -1 | awk '{print $3}'", function(error, out, err) {  
 				if (out) {
 					var cpu = Number(out);
@@ -48,7 +51,7 @@ JobManager.prototype.secondPassed = function(now) {
 					}
 				}
 			});
-		} catch (ex) {}
+		} catch (ex) {} //TODO:REVIEW add logging
 
 		try {
 			exec("df | grep minutes_ram | awk '{print $(NF-2)}'", function(error, out, err) {  
@@ -59,12 +62,14 @@ JobManager.prototype.secondPassed = function(now) {
 					}
 				}
 			});
-		} catch (ex) {}
+		} catch (ex) {} //TODO:REVIEW add logging
 	}
 };
 
 JobManager.prototype.halfMinuteElapsed = function(now) {
 	var me=this;
+	
+	//TODO:REVIEW counter names should be extracted from the function and made available outside it (module level?)
 
 	try {
 		var msBefore = new Date().getTime();
@@ -108,6 +113,8 @@ JobManager.prototype.archive = function(msBefore, time, folder, counter) {
 	if (!folder) return;
 
 	var me=this;
+	
+	//TODO:REVIEW system information and operation functions should be extracted to a separate module and at some point replaced with cross platform modules.
 
 	var cmd = "rm -rf $(ls "+folder+"/ | awk '{if ($1 < \"" + time + "\") print}' | sed 's|^|./"+ folder +"/|')";
 	me.logger.info("Starting archive with command: " + cmd.colorBlue());

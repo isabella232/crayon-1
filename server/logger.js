@@ -1,4 +1,8 @@
-var sys = require("sys");
+//TODO:REVIEW synchronous outputting to the console should be eliminated and instead replaced by evented/async output to a file
+//multiple options are here - https://github.com/joyent/node/wiki/modules#wiki-logs
+//Winston seems to have what a "real" server app really requires - https://github.com/flatiron/winston
+
+var sys = require("sys"); //TODO:REVIEW replace sys with util
 var countersLib = require("./counter.js");
 
 // Keep a counter of errors

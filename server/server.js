@@ -17,16 +17,19 @@ for (var argIndex in process.argv) {
 	if (arg.indexOf("--demoMode") === 0) { demoMode = true; noAggregations = true; }
 }
 
-console.log(process.argv);
-console.log("Hostname: " + hostname);
+console.log(process.argv); //TODO:REVIEW - change to logger
+console.log("Hostname: " + hostname); //TODO:REVIEW - change to logger
 
 // Priority imports
 var countersLib = require("./counter.js");
 countersLib.setHostname(hostname);
 countersLib.setCrayonId(serverPort);
 
+//TODO:REVIEW we should probably commit to git (at least for the production servers) node_modules
+//See http://www.futurealoof.com/posts/nodemodules-in-git.html
+
 // Imports
-var sys = require("sys");
+var sys = require("sys"); //TODO:REVIEW the sys module is deprecated. "util" replaces it. Need to grep all the source and change it.
 var http = require("http");  
 var path = require("path");
 var fs = require("fs");
@@ -42,6 +45,8 @@ var JobManager = require("./jobManager.js").JobManager;
 var mail = require("./crayonMail.js");
 var rabbitmq = require("./rabbitmq-util.js");
 
+
+//TODO:REVIEW cosmetic - either use an init function per module (instead of multiple functions), or use a global config object that everyone uses and rely on node.js module caching
 // Pass global instances to sub modules
 contextLib.setLogger(logger);
 configLib.setLogger(logger);
@@ -63,8 +68,11 @@ if (demoMode) {
 	logger.warn("Running in demo mode!");
 }
 
+
+//TODO:REVIEW Cosmetic. Why is mail.connect critical in the startup chain? can't the graphing system work without it? 
+//Also email.server.connect is synchornous, so why use the callback pattern at all? just name it connectSync and eliminate the callback. 
 mail.connect(function(err) {
-	if (err) return;	
+	if (err) return;	//TODO:REVIEW add logging
 
 	// Start server
 	logger.info("Creating server on " + serverPort.toString().colorMagenta() + "...");

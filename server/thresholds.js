@@ -16,6 +16,7 @@ module.exports.saveThresholds = function(callContext) {
 	fs.writeFile(staticDir + "/thresholds.conf", thresholdsText, function(err) {
 	    if(err) {
 	        callContext.respondJson(500, {error:"Failed saving thresholds.conf: " + err});
+	        //TODO:REVIEW add logging
 	        return;
 	    } 
 

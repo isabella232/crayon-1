@@ -26,6 +26,8 @@ module.exports.init = function(portForGraphiteFormat) {
 					logger.error("Failed handling graphite message (during receive): " + ex.stack);
 				}
 			});
+			
+			//TODO:REVIEW - add socket.on('error') for logging and error handling purposes
 
 			socket.on('close', function() {
 				try {

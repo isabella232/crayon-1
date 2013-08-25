@@ -21,8 +21,8 @@ var graphListUpdated = function(callback) {
 		byCategory[category].push(graph);
 	}
 	
-	console.log(byServers);
-	console.log(byCategory);
+	console.log(byServers); //TODO:REVIEW - change to logger
+	console.log(byCategory); //TODO:REVIEW - change to logger
 	
 	if (callback) callback();
 };

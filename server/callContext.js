@@ -25,10 +25,11 @@ function CallContext(req, res) {
 		me.remoteIP = req.socket.remoteAddress;
 	} else if (req.headers && req.headers["x-real-ip"]) {
 		me.remoteIP = req.headers["x-real-ip"];
-	}
+	}	
+	//TODO:REVIEW:- missing "else". what if none of the above is true?
 
 	// Parse request query args (not post body yet)
-	var urlObj = url.parse(me.request.url);
+	var urlObj = url.parse(me.request.url); //TODO:REVIEW: if a URL contains .. we should reject the request. This is critical.
 	me.uri = urlObj.pathname;
 	if (me.uri == "/") {
 		me.uri = configLib.getConfig().homePage;
@@ -285,6 +286,7 @@ CallContext.prototype.parseArgs = function(callback) {
 
 // Get the proper mime type for our files (we don't use that many in our server)
 var getEndingContentType = function(filename){
+	//TODO:REVIEW: - better to extract the extension once and then use a Hash / Associative array to get the mime type
 	if (filename.endsWith(".js")) return "text/javascript"; 
 	else if (filename.endsWith(".html")) return "text/html";
 	else if (filename.endsWith(".htm"))  return "text/html";
@@ -310,6 +312,7 @@ CallContext.prototype.getRequestedFile = function() {
 	} else {
 		me.filename = path.join(staticDir, me.uri);
 	}
+	//TODO:REVIEW - the result path must be verified after join - that is under __dirname or staticDir. This is critical.
 
 	// Check for the file to serve's existnace
 	path.exists(me.filename, function(exists) {
@@ -345,9 +348,34 @@ CallContext.prototype.getRequestedFile = function() {
 			// For all other types, try to return 304 if the browser's etag matches our file's
 			if (contentType != "text/html" && 
 				me.request.headers['if-none-match'] === etag) {
+				//TODO:REVIEW - Why is text/html etag check not enough?
 				me.respondText(304,null,responseHeaders);
 				return;
 			}
+			
+			
+			/* TODO:REVIEW
+			+			
+			+			This is not the correct way to send files in an evented framework.
+			+			Also - it does not deflate files
+			+			
+			+			One option is- 
+			+			
+			+			 var readStream = fileSystem.createReadStream(filePath);
+			+			    readStream.on('data', function(data) {
+			+			        response.write(data);
+			+			    });
+			+			    
+			+			    readStream.on('end', function() {
+			+			        response.end();        
+			+			    });
+			+			    
+			+			 Another option (THE PREFERRED WAY) - pipe the fs to the response. This way, you could also add 
+			+			 a deflate or a gzip in the pipeline
+			+			 
+			+			 See - http://nodejs.org/api/zlib.html#zlib_class_zlib_inflate
+			+			
+			+			*/
 
 			// Read the file and send the result
 			fs.readFile(me.filename, "binary", function(err, file) {

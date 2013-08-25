@@ -13,7 +13,7 @@ module.exports.setConfig = function(configText) {
 			configText = JSON.stringify(configText);
 		}
 
-		console.log(configText);
+		console.log(configText); //TODO:REVIEW - change to logger
 		config = JSON.parse(configText);
 		logger.info("Configuration changed: \n" + JSON.stringify(config));
 		saveConfigToDisk(configText);
@@ -38,5 +38,7 @@ var saveConfigToDisk = function(configText) {
 	}); 
 };
 
+
+//TODO:REVIEW use fs.watch to trigger a config reload. Can Crayon handle dynamic config changes? Do we need to emit any event when the config changes?
 
 reloadConfigFileFromDisk();
