@@ -17,11 +17,11 @@ if ! [ -d ".svn" ]; then
 	action=theirs-full
 fi
 
-echo "Adding new dashboards to svn"
-svn add ./* --no-auth-cache --non-interactive --username $user --password $pwd --quiet
-
 echo "Updating local repository with new dashboards"
 svn update . --username svnuser --password 5tgbnhy6 --no-auth-cache --non-interactive --accept $action
+
+echo "Adding new dashboards to svn"
+svn add ./* --no-auth-cache --non-interactive --username $user --password $pwd --quiet
 
 echo "Committing changes to svn"
 svn commit -m "Committing crayon dashboards" --no-auth-cache --non-interactive --username $user --password $pwd
