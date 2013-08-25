@@ -10,21 +10,21 @@ module.exports.systemCounterDefaultInterval = 1;
 
 setInterval(function() {
 	try {
-	var now = new Date();
-	var allMetrics = [];
-	for (var key in counterByKey) {
-		var counter = counterByKey[key];
-		if (counter.keepState && counter.args.N == 0) continue;
-
-		var metric = counter.getMetric();
-		metric.t = now;
-		allMetrics.push(metric);
-		counter.resetCounter();
-	}
-
-	measurements.addBulkTimeslotsByDate(1024*allMetrics.length,allMetrics,"counter", function() {});
+		var now = new Date();
+		var allMetrics = [];
+		for (var key in counterByKey) {
+			var counter = counterByKey[key];
+			if (counter.keepState && counter.args.N == 0) continue;
+	
+			var metric = counter.getMetric();
+			metric.t = now;
+			allMetrics.push(metric);
+			counter.resetCounter();
+		}
+	
+		measurements.addBulkTimeslotsByDate(1024*allMetrics.length,allMetrics,"counter", function() {});
 	} catch (ex) {
-		console.log("Cannot flush counters: " + ex.stack);
+		console.log("Cannot flush counters: " + ex.stack); //TODO:REVIEW switch to configured logger
 	}
 }, 1000);
 
@@ -62,21 +62,20 @@ module.exports.flushAll = function() {
 };
 
 module.exports.getOrCreateCounter = function(secondsInterval, name, component, server, keepState) {
-	if (!server) server = shortHostname;
-	if (!keepState) keepState = false;
+	if (typeof server != "string") server = shortHostname;
+	if (typeof keepState != "boolean") keepState = false;
 
 	var key = name + "_" + component + "_" + server;
 	var counter = counterByKey[key];
-	if (counter) return counter;
+	if (typeof counter == "object") return counter;
 
 	counter = new Counter(secondsInterval, name, component, server, keepState);
-	return counterByKey[key];
+	counterByKey[key] = counter;
+	return counter;
 };
 
 function Counter(secondsInterval, name, component, server, keepState) {
-	var me=this;
-	me.key = name + "_" + component + "_" + server;
-	counterByKey[me.key] = me;
+	var me=this;	
 	me.args = {};
 	if (server != null) me.args.s = server;
 	if (component != null) me.args.c = component + crayonId;
@@ -103,7 +102,7 @@ Counter.prototype.getMetric = function() {
 
 	var argsCopy = {};
 	for (var key in me.args) {
-		argsCopy[key] = me.args[key];
+		argsCopy[key] = me.args[key];  
 	}
 	return argsCopy;
 };
@@ -114,7 +113,7 @@ Counter.prototype.flushCounter = function() {
 
 		me.args.t = new Date();
 		try {
-			var argsCopy = {};
+			var argsCopy = {}; //TODO:REVIEW why not use getMetric() . No need to re-implement here.
 			for (var key in me.args) {
 				argsCopy[key] = me.args[key];
 			}
@@ -126,7 +125,7 @@ Counter.prototype.flushCounter = function() {
 			measurements.addBulkTimeslotsByDate(1024,[argsCopy],"counter", function() {});
 			me.resetCounter();
 		} catch (ex) {
-			console.log("Cannot flush counter: " + ex.stack);
+			console.log("Cannot flush counter: " + ex.stack); //TODO:REVIEW use the configured logger
 			// counter cannot be written, error is ignored not to spam
 		}
 	//}
@@ -137,7 +136,7 @@ Counter.prototype.stop = function() {
 	var me=this;
 	try {
 		if (me.timer) clearInterval(me.timer);
-	} catch (ex) {}
+	} catch (ex) {} ////TODO:REVIEW add log message
 };
 
 Counter.prototype.addSample = function(newValue) {
