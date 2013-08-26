@@ -120,6 +120,7 @@ window.reloadDashboardList = function() {
 		success: function(result) {
 			var lines = result.split('\n');
 
+			lines.sort().reverse();
 			for (var i = 0; i < lines.length; ++i) {
 				var line = lines[i].trim();
 

@@ -408,6 +408,10 @@ var loadDashboard = function() {
 	for (graphNum in dashboard.graphs) {
 		var graph = dashboard.graphs[graphNum];
 
+		if (graph.graphOpts == null) {
+			graph.graphOpts = {};
+		}
+
 		for (key in dashboard.defaultGraphOpts) {
 			if (!graph.graphOpts) graph.graphOpts = {};
 			if (graph.graphOpts[key] == null) graph.graphOpts[key] = dashboard.defaultGraphOpts[key];

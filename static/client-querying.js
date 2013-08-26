@@ -163,10 +163,10 @@ Query.prototype.queryData = function() {
 							doc.t = new Date(doc.t.getTime() - (doc.t.getTime() % (granularityInSeconds*1000)));
 						}
 
-						if (currentDS.shiftSeconds) doc.t=doc.t.addHours(currentDS.addSeconds);
-						if (currentDS.shiftHours) doc.t=doc.t.addHours(currentDS.addHours);
-						if (currentDS.shiftMinutes) doc.t=doc.t.addHours(currentDS.addMinutes);
-						if (currentDS.shiftDays) doc.t=doc.t.addHours(currentDS.addDays);
+						if (currentDS.shiftSeconds) doc.t=doc.t.addSeconds(currentDS.shiftSeconds);
+						if (currentDS.shiftHours) doc.t=doc.t.addHours(currentDS.shiftHours);
+						if (currentDS.shiftMinutes) doc.t=doc.t.addMinutes(currentDS.shiftMinutes);
+						if (currentDS.shiftDays) doc.t=doc.t.addDays(currentDS.shiftDays);
 
 					
 
@@ -209,10 +209,10 @@ Query.prototype.queryData = function() {
 							doc.t = new Date(doc.t.getTime() - (doc.t.getTime() % (granularityInSeconds*1000)));
 						}
 
-						if (currentDS.shiftSeconds) doc.t=doc.t.addHours(currentDS.addSeconds);
-						if (currentDS.shiftHours) doc.t=doc.t.addHours(currentDS.addHours);
-						if (currentDS.shiftMinutes) doc.t=doc.t.addHours(currentDS.addMinutes);
-						if (currentDS.shiftDays) doc.t=doc.t.addHours(currentDS.addDays);
+						if (currentDS.shiftSeconds) doc.t=doc.t.addSeconds(currentDS.shiftSeconds);
+						if (currentDS.shiftHours) doc.t=doc.t.addHours(currentDS.shiftHours);
+						if (currentDS.shiftMinutes) doc.t=doc.t.addMinutes(currentDS.shiftMinutes);
+						if (currentDS.shiftDays) doc.t=doc.t.addDays(currentDS.shiftDays);
 
 						doc.A = doc.M = doc.m = doc.S = Number(parts[4]);
 						doc.N = 1;

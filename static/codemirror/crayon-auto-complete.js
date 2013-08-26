@@ -2180,3 +2180,13 @@ staticAutoComplete["untilNow"] = ' \
   <span class="dyDescType">Other Examples:</span> <font color="red">NONE</font><br> \
   <br> </div> \
 ';
+
+staticAutoComplete["legendWidth"] = ' \
+<div class="option"><a name="legendWidth"></a><b>legendWidth</b><br> \
+  <p>Controls the width of the legend div</p> \
+  <i><span class="dyDescType">Type:</span> integer </i><br> \
+  <i><span class="dyDescType">Default:</span> 230 </i><p></p> \
+  <span class="dyDescType">Gallery Samples:</span> <font color="red">NONE</font><br> \
+  <span class="dyDescType">Other Examples:</span> <font color="red">NONE</font><br> \
+  <br> </div> \
+';
