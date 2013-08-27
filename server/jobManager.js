@@ -1,4 +1,3 @@
-var logger = require("./logger.js");
 var configLib = require("./configuration.js");
 var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
