@@ -1,35 +1,67 @@
-//TODO:REVIEW synchronous outputting to the console should be eliminated and instead replaced by evented/async output to a file
-//multiple options are here - https://github.com/joyent/node/wiki/modules#wiki-logs
-//Winston seems to have what a "real" server app really requires - https://github.com/flatiron/winston
-
-var sys = require("util"); 
 var countersLib = require("./counter.js");
+var winston = require('winston');
 
 // Keep a counter of errors
 var errorCounter = countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "Errors Logged", "crayon");
-
-// The log date prefix for each record
-var getLogDate = function() {
-	var t = new Date();
-	return t.toISOString();
-};
+var crayonCustomLog = {
+	    levels: {
+	      "[DEBUG]": 0,
+	      "[INFO]": 1,
+	      "[WARN]": 2,
+	      "[ERROR]": 3
+	    },
+	    colors: {
+	      "[DEBUG]": 'blue',
+	      "[INFO]": 'green',
+	      "[WARN]": 'yellow',
+	      "[ERROR]": 'red'
+	    },
+	    filename: __dirname+'/crayon.log' 
+	  };
+var initialized = false;
 
 var debug = function(str) {
-	sys.puts("[" + getLogDate() + "] [DEBUG] " + str);
+	winston.log('[DEBUG]', str);
 };
 
 var error = function(str) {
 	errorCounter.increment();
-	sys.puts(("[" + getLogDate() + "] [ERROR] " + str).colorRed());
+	//winston.error(str);
+	winston.log('[ERROR]', str);
 };
 
 var info = function(str) {
-	sys.puts("[" + getLogDate() + "] [INFO] " + str);
+	//winston.info(str);
+	winston.log('[INFO]', str);
 };
 
 var warn = function(str) {
-	sys.puts(("[" + getLogDate() + "] [WARN] " + str).colorYellow());
+	//winston.warn(str);
+	winston.log('[WARN]', str);
 };
+
+function init() {
+	if (initialized)
+		return;
+	
+	winston.setLevels(crayonCustomLog.levels);
+	winston.addColors(crayonCustomLog.colors);
+	winston.remove(winston.transports.Console);
+	winston.add(winston.transports.Console, {level: '[DEBUG]', timestamp: 'true', colorize: 'true'});
+	winston.add(winston.transports.File, {
+	    filename: crayonCustomLog.filename,
+	    handleExceptions: true,
+	    timestamp: true,
+	    json: false,
+	    level: '[DEBUG]',
+	    colorize: false,
+	    maxsize: 10000000,
+	    maxFiles: 10
+	  });
+	initialized = true;
+}
+
+init();
 
 module.exports.debug = debug;
 module.exports.info = info;

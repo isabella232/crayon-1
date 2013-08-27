@@ -202,6 +202,7 @@ Since it's only javascript, there's also no need for compilation.
    e. `npm install emailjs` - Allows sending mail notifications on alerts  
    f. `npm install amqp` - Allows getting metrics from rabbitmq  
    g. `npm install request` - Allows getting metrics from shards  
+   h. `npm install winston` - Logging framework 
   
 2. `cd /var/lib` and then `git clone git://github.com/shai-d/crayon.git`  
 3. Go to the crayon server directory `cd crayon/server`  
