@@ -1,4 +1,3 @@
-//var countersLib = require("./counter.js");
 var winston = require('winston');
 
 // Keep a counter of errors
