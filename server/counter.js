@@ -1,4 +1,4 @@
-
+var logger = require("./logger.js");
 var measurements = require("./measurements.js");
 var dates = require("./dates.js");
 var counterByKey = {};
@@ -24,7 +24,7 @@ setInterval(function() {
 	
 		measurements.addBulkTimeslotsByDate(1024*allMetrics.length,allMetrics,"counter", function() {});
 	} catch (ex) {
-		console.log("Cannot flush counters: " + ex.stack); //TODO:REVIEW switch to configured logger
+		logger.error("Cannot flush counters: " + ex.stack); 
 	}
 }, 1000);
 
@@ -125,7 +125,7 @@ Counter.prototype.flushCounter = function() {
 			measurements.addBulkTimeslotsByDate(1024,[argsCopy],"counter", function() {});
 			me.resetCounter();
 		} catch (ex) {
-			console.log("Cannot flush counter: " + ex.stack); //TODO:REVIEW use the configured logger
+			logger.error("Cannot flush counter: " + ex.stack); 
 			// counter cannot be written, error is ignored not to spam
 		}
 	//}
@@ -136,7 +136,9 @@ Counter.prototype.stop = function() {
 	var me=this;
 	try {
 		if (me.timer) clearInterval(me.timer);
-	} catch (ex) {} ////TODO:REVIEW add log message
+	} catch (ex) {
+		logger.error("caught an error on stop: "+ex);
+	} 
 };
 
 Counter.prototype.addSample = function(newValue) {

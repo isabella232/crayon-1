@@ -13,7 +13,7 @@ module.exports.setConfig = function(configText) {
 			configText = JSON.stringify(configText);
 		}
 
-		console.log(configText); //TODO:REVIEW - change to logger
+		logger.info(configText); 
 		config = JSON.parse(configText);
 		logger.info("Configuration changed: \n" + JSON.stringify(config));
 		saveConfigToDisk(configText);

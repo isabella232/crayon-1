@@ -1,3 +1,4 @@
+var logger = require("./logger.js");
 var configLib = require("./configuration.js");
 var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
@@ -51,7 +52,9 @@ JobManager.prototype.secondPassed = function(now) {
 					}
 				}
 			});
-		} catch (ex) {} //TODO:REVIEW add logging
+		} catch (ex) {
+			logge.error("failed to execute sar "+ex);
+		} 
 
 		try {
 			exec("df | grep minutes_ram | awk '{print $(NF-2)}'", function(error, out, err) {  
@@ -62,7 +65,9 @@ JobManager.prototype.secondPassed = function(now) {
 					}
 				}
 			});
-		} catch (ex) {} //TODO:REVIEW add logging
+		} catch (ex) {
+			logge.error("failed to extract df info "+ex);
+		} 
 	}
 };
 

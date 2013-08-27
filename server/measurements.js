@@ -626,11 +626,11 @@ function combineRows(existingRow, newRow) {
 	combinedRow.V = combinedRow.V || 0;
 			
 	// For debugging purposes this often helps a lot
-	if (false) { //TODO:REVIEW - change to logger
-		console.log("===============");
-		console.log("COMBINED: " + JSON.stringify(combinedRow));
-		console.log("NEW: " + JSON.stringify(newRow));
-		console.log("EXISTING: " + JSON.stringify(existingRow));
+	if (false) { 
+		logger.debug("===============");
+		logger.debug("COMBINED: " + JSON.stringify(combinedRow));
+		logger.debug("NEW: " + JSON.stringify(newRow));
+		logger.debug("EXISTING: " + JSON.stringify(existingRow));
 	}
 
 	return combinedRow;
