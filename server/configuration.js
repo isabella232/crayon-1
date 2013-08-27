@@ -1,7 +1,8 @@
 var fs = require('fs');
+var logger = require("./logger.js");
+
 var config = {};
-var logger;
-module.exports.setLogger = function(l) { logger = l; };
+
 module.exports.getConfig = function() { return config; };
 module.exports.setConfigValue = function(name, value) { config[name] = value; };
 module.exports.setConfig = function(configText) {

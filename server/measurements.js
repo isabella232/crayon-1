@@ -1,3 +1,4 @@
+var logger = require("./logger.js");
 var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
@@ -9,9 +10,7 @@ var request = require('request');
 var zlib = require('zlib');
 
 // Set the global services for this module
-var logger;
 var contextLib;
-module.exports.setLogger = function(l) { logger = l; };
 module.exports.setContextLib = function(l) { contextLib = l; };
 
 // Converts the time field in the arguments to a valid date object

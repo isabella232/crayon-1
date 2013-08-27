@@ -1,3 +1,4 @@
+var logger = require("./logger.js");
 var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
@@ -5,9 +6,7 @@ var fs = require('fs');
 var staticDir = __dirname + '/../static';
 
 // Set the global services for this module
-var logger;
 var contextLib;
-module.exports.setLogger = function(l) { logger = l; };
 module.exports.setContextLib = function(l) { contextLib = l; };
 
 module.exports.saveThresholds = function(callContext) {

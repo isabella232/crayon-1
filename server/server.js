@@ -56,17 +56,11 @@ var JobManager = require("./jobManager.js").JobManager;
 var mail = require("./crayonMail.js");
 var rabbitmq = require("./rabbitmq-util.js");
 
-
-
 //TODO:REVIEW cosmetic - either use an init function per module (instead of multiple functions), or use a global config object that everyone uses and rely on node.js module caching
 // Pass global instances to sub modules
-contextLib.setLogger(logger);
-configLib.setLogger(logger);
-measurements.setLogger(logger);
+
 measurements.setContextLib(contextLib);
-dashboards.setLogger(logger);
 dashboards.setContextLib(contextLib);
-thresholds.setLogger(logger);
 thresholds.setContextLib(contextLib);
 
  

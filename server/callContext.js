@@ -6,9 +6,7 @@ var zlib = require('zlib');
 var countersLib = require("./counter.js");
 var configLib = require("./configuration.js");
 var staticDir = __dirname + '/../static';
-
-var logger;
-module.exports.setLogger = function(l) { logger = l; };
+var logger = require("./logger.js");
 
 // Constructor for each client call. This object is passed as a token between most functions
 function CallContext(req, res) {
