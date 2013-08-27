@@ -159,16 +159,13 @@ Phew, There are so many... be sure to check out the screen shots to see a few mo
 [JSHint]: https://github.com/jshint/jshint
 [JSBeautifier]: https://github.com/einars/js-beautify
 
-What's your roadmap ?
----------------------
+Crayon Shell
+------------
 
-We've just started and this is the first version we're uploading here.  
-I'll try to lay out a list of TODO's here (and update it occasionaly)  
-
-* We should add Monitoring on top of the values
-* We really want to add configurable Soft & Adaptive Thresholding algorithms
-* We should set up a site with a lot more documentation
-* We should set up a demo site for people to test Crayon online
+To make things easier, we have created the crayon shell.  
+It is a single portable shell file with simple API for contributing metrics as well as querying them.  
+The file can be found at `/server/crayon-client.sh`.  
+Run it without parameters to get further help about available commands and switches.  
 
 What are my alternatives ?
 --------------------------
