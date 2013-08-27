@@ -1,0 +1,39 @@
+{
+    "id": "ex_simple_defaults",
+    "sidebarText": "2. Using Defaults",
+    "header": "Example: Using Defaults",
+    "defaultGraphOpts": {
+        "width": 200,
+        "height": 100,
+        "legendWidth": 300
+    },
+    "defaultDataSourceOpts": {
+        "name": "Crayon_Host_CPU",
+        "unit": "r",
+        "component": "crayon*",
+        "server": "$crayon-server"
+    },
+    "graphs": [{
+        "dataSources": [{
+            "from": "last 5 minutes"
+        }],
+        "graphOpts": {
+            "title": "CPU 5 minutes"
+        }
+    }, {
+        "dataSources": [{
+            "from": "last 10 minutes"
+        }],
+        "graphOpts": {
+            "title": "CPU 10 minutes"
+        }
+    }, {
+        "dataSources": [{
+            "from": "last 30 minutes"
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes",
+            "width": "wholeLine"
+        }
+    }]
+}

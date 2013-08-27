@@ -1,0 +1,54 @@
+{
+    "id": "ex_variables",
+    "sidebarText": "4. Variables",
+    "header": "Example: Using a variables (both constants and from url)",
+    "variables": {
+        "short_period": "30",
+        "shorter_period": "10",
+        "shortest_period": "5",
+        "name_from_somewhere": "url:/variables/example_metric_names.txt"
+    },
+    "graphs": [{
+        "dataSources": [{
+            "name": "$name_from_somewhere",
+            "unit": "r",
+            "from": "last $shortest_period minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU $shortest_period minutes",
+            "width": 200,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "$name_from_somewhere",
+            "unit": "r",
+            "from": "last $shorter_period minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU $shorter_period minutes",
+            "width": 200,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "$name_from_somewhere",
+            "unit": "r",
+            "from": "last $short_period minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU $short_period minutes",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }]
+}

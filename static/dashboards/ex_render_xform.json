@@ -1,0 +1,67 @@
+{
+    "id": "ex_render_xform",
+    "sidebarText": "12. Render transform",
+    "header": "Example: An example of rendering transformations",
+    "graphs": [{
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes + random [-10 to 10]",
+            "yTransform": "y+(Math.random()*20-10)",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes, as a percent of 50% cpu",
+            "yTransform": "y*100/50",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes, y value granularity of 5%",
+            "yTransform": "y-(y%5)",
+            "width": "wholeLine",
+            "drawPoints": true,
+            "pointSize": 4,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }]
+}

@@ -1,0 +1,92 @@
+{
+    "id": "ex_aggregations",
+    "sidebarText": "14. Aggregations",
+    "header": "Example: Aggregating Series Lines",
+    "graphs": [{
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }],
+        "graphOpts": {
+            "title": "All our series lines",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }, {
+            "match": {
+                "name": "(modulo|sinus)"
+            },
+            "aggregationFunction": "sum",
+            "insteadOfMatches": true,
+            "name": "modulo+sinus"
+        }],
+        "graphOpts": {
+            "title": "Combining module and sinus",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }, {
+            "match": {
+                "name": "(modulo|sinus)"
+            },
+            "match2": {
+                "name": "bitwise.*"
+            },
+            "aggregationFunction": "sum",
+            "insteadOfMatches": true,
+            "name": "modulo+sinus-bitwiseAnd"
+        }],
+        "graphOpts": {
+            "title": "Combining module and sinus and subtracting bitwiseAnd",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }]
+}

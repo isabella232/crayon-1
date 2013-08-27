@@ -1,0 +1,21 @@
+{
+    "id": "ex_autorefresh",
+    "sidebarText": "9. Auto Refresh",
+    "header": "Example: Showing A graph which auto refreshes itself",
+    "graphs": [{
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 5 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server",
+            "tailSecondsInterval": 10
+        }],
+        "graphOpts": {
+            "title": "Last 5 minutes CPU with auto refresh every 10 seconds",
+            "width": "wholeLine",
+            "height": 200,
+            "legendWidth": 300
+        }
+    }]
+}

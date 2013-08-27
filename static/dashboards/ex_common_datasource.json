@@ -1,0 +1,29 @@
+{
+    "id": "ex_common_datasource",
+    "sidebarText": "3. Common Datasource",
+    "header": "Example: Using a common data source",
+    "dataSources": [{
+        "name": "Crayon_Host_CPU",
+        "unit": "r",
+        "from": "last 30 minutes",
+        "component": "crayon*",
+        "server": "$crayon-server",
+        "id": "myCommonDataSource"
+    }],
+    "graphs": [{
+        "dataSources": ["myCommonDataSource"],
+        "graphOpts": {
+            "title": "CPU",
+            "width": "wholeLine",
+            "height": 100
+        }
+    }, {
+        "dataSources": ["myCommonDataSource"],
+        "graphOpts": {
+            "title": "CPU Delta",
+            "width": "wholeLine",
+            "isDelta": true,
+            "height": 100
+        }
+    }]
+}

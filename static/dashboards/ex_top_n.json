@@ -1,0 +1,92 @@
+{
+    "id": "ex_top_n",
+    "sidebarText": "13. Top N Metrics",
+    "header": "Example: Displaying only the Top N Metrics",
+    "graphs": [{
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200
+        }],
+        "graphOpts": {
+            "title": "All our series lines",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200
+        }],
+        "graphOpts": {
+            "title": "Series line with the highest total sum",
+            "width": "wholeLine",
+            "sortByTotalSum": "desc",
+            "limit": 1,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200
+        }],
+        "graphOpts": {
+            "title": "The most deviant series line (highest stdev)",
+            "width": "wholeLine",
+            "sortByDeviant": "desc",
+            "limit": 1,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200
+        }],
+        "graphOpts": {
+            "title": "The series which has the lowest value currently (at the end)",
+            "width": "wholeLine",
+            "sortByCurrentMaximum": "asc",
+            "limit": 1,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }]
+}

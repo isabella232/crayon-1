@@ -1,0 +1,48 @@
+{
+    "id": "ex_simple_dash",
+    "sidebarText": "1. Simple Dashboard",
+    "header": "Example: A simple dashboard",
+    "graphs": [{
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 5 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 5 minutes",
+            "width": 200,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 10 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 10 minutes",
+            "width": 200,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }]
+}

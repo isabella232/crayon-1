@@ -1,0 +1,50 @@
+{
+    "id": "ex_quantizing",
+    "sidebarText": "5. Quantizing",
+    "header": "Example: Quantizing a single metric into several timeframe sizes",
+    "graphs": [{
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes, not quantized",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server",
+            "granularityInSeconds": 60
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes, quantized per 60 seconds",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server",
+            "granularityInMinutes": 2
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes, quantized per 2 minutes",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }]
+}

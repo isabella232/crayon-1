@@ -1,0 +1,39 @@
+{
+    "id": "ex_timeshift",
+    "sidebarText": "7. Time Shifting",
+    "header": "Example: Showing multiple CPU timeframes overlapping each other",
+    "graphs": [{
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "30 minutes ago",
+            "to": "20 minutes ago",
+            "component": "crayon*",
+            "server": "$crayon-server",
+            "replaceName": [".*", "CPU 30-20 minutes ago"],
+            "shiftMinutes": 20
+        }, {
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "20 minutes ago",
+            "to": "10 minutes ago",
+            "component": "crayon*",
+            "server": "$crayon-server",
+            "replaceName": [".*", "CPU 20-10 minutes ago"],
+            "shiftMinutes": 10
+        }, {
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "10 minutes ago",
+            "component": "crayon*",
+            "server": "$crayon-server",
+            "replaceName": [".*", "CPU 10-0 minutes ago"]
+        }],
+        "graphOpts": {
+            "title": "CPU 30 minutes, in chunks over overlapping 10 minute timeframes",
+            "width": "wholeLine",
+            "height": 200,
+            "legendWidth": 300
+        }
+    }]
+}

@@ -237,56 +237,58 @@ var highlightLegendTimeout = null;
 
 var lastHighlightAt = new Date().getTime();
 var highlightCallback_ShowSeriesName = function(event, x, points, row, seriesName) {
-	lastHighlightAt = new Date().getTime();
-	clearTimeout(highlightLegendTimeout);
-	highlightLegendTimeout = setTimeout(function() {
-		if (new Date().getTime() - lastHighlightAt > 500) {
-			highlightCallback_ShowSeriesNameOnce(event, x, points, row, seriesName);
-		}
-	}, 600);
-}
-
-var unhighlightCallback_ShowSeriesName = function(event, x, points, row, seriesName) {
-	clearTimeout(highlightLegendTimeout);
-	highlightLegendDiv = highlightLegendDiv || document.getElementById("highlightSeriesLabelDiv");
-	highlightLegendDiv.style.display = "none";
-}
-
-var highlightCallback_ShowSeriesNameOnce = function(event, x, points, row, seriesName) {
-	var point = null;
-	//console.log(name);
-
+		var point = null;
 	for (i in points) {
 		if (points[i].name == seriesName) { 
 			point = points[i];
 			break;
 		}
 	}
-
 	if (!point) return;
 
 	var name = new Date(point.xval).toLocaleString() + "<br>";
 	name += seriesName.replace(/<[^>]+>/g,'').replace(":","<br>");
+	var divInnerHtml = name + "<br>Value: " + point.yval;
+	showHighlightLegendDivWithDelay(divInnerHtml, event.x || event.clientX, event.y  || event.clientY);
+}
 
+var unhighlightCallback_ShowSeriesName = function(event, x, points, row, seriesName) {
+	hideHighlightLegendDiv();
+}
+
+
+var onMouseOverSeriesLabel = function(divId, fullCounterName, el) {
+	var divCache = cacheByDiv[divId];
+	var seriesObj = divCache.seriesFound[fullCounterName]
+	var pos = el.getBoundingClientRect();
+	showHighlightLegendDiv(seriesObj.summaryText, pos.left + 5, pos.top + 5);
+}
+
+var hideHighlightLegendDiv = function() {
+	clearTimeout(highlightLegendTimeout);
 	highlightLegendDiv = highlightLegendDiv || document.getElementById("highlightSeriesLabelDiv");
+	highlightLegendDiv.style.display = "none";
+}
 
-	var yNum = point.yval;
-	/*cacheByDiv[
-	
-	if (divCache.graphOptions.decimalRounding != null) {
-		var num = Math.pow(10,divCache.graphOptions.decimalRounding);
-		yNum = Math.round(yNum * num) / num;
-	}*/
+var showHighlightLegendDivWithDelay = function(divInnerHtml, x, y) {
+	lastHighlightAt = new Date().getTime();
+	clearTimeout(highlightLegendTimeout);
+	highlightLegendTimeout = setTimeout(function() {
+		if (new Date().getTime() - lastHighlightAt > 500) {
+			showHighlightLegendDiv(divInnerHtml, x, y);
+		}
+	}, 600);
+}
 
-	highlightLegendDiv.innerHTML = name + "<br>Value: " + yNum;
-	//$(highlightLegendDiv).position(event.y, event.x);
-	highlightLegendDiv.style.left = (event.x || event.clientX)+ "px";
-	highlightLegendDiv.style.top = ((event.y  || event.clientY) + 10) + "px";
+var showHighlightLegendDiv = function(divInnerHtml, x, y) {
+	highlightLegendDiv = highlightLegendDiv || document.getElementById("highlightSeriesLabelDiv");
+	highlightLegendDiv.innerHTML = divInnerHtml;
+	highlightLegendDiv.style.left = x + "px";
+	highlightLegendDiv.style.top = (y + 10) + "px";
 	highlightSeriesLabelDiv.style.zIndex = 20
 	highlightLegendDiv.style.display = "block";
-
-	// point.yval;
 }
+
 
 var drawGraph = function(graphDiv, labelsDiv, graphData, userOptions) {
 	var divCache = {};
@@ -386,7 +388,10 @@ var drawGraph = function(graphDiv, labelsDiv, graphData, userOptions) {
 		var seriesObj = divCache.seriesFound[fullCounterName];
 		if (!seriesObj) {
 			divCache.seriesFound[fullCounterName] = seriesObj = {};
-			seriesObj.label = "<SPAN class='legendItem'>" + fullCounterName +"</SPAN>";
+			seriesObj.label = "<SPAN class='legendItem' " + 
+				" onmouseover='onMouseOverSeriesLabel(&quot;" + graphDiv.id + "&quot;, &quot;" + fullCounterName + "&quot;, this)' " +
+				" onmouseout='hideHighlightLegendDiv()' >" + 
+				fullCounterName + "</SPAN>";
 			seriesObj.fullCounterName = fullCounterName;
 			seriesObj.S = counter.S || 0;
 			seriesObj.N = counter.N || 1;
@@ -416,27 +421,56 @@ var drawGraph = function(graphDiv, labelsDiv, graphData, userOptions) {
 		seriesObj.cm = counter.m||0;
 	}
 
-		 if (divCache.graphOptions.sortByTotalAverage = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.A - a.A); }); }
-	else if (divCache.graphOptions.sortByTotalMinimum = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.m - a.m); }); }
-	else if (divCache.graphOptions.sortByTotalMaximum = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.M - a.M); }); }
-	else if (divCache.graphOptions.sortByTotalSum = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.S - a.S); }); }
-	else if (divCache.graphOptions.sortByTotalCount = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.N - a.N); }); }
-	else if (divCache.graphOptions.sortByCurrentAverage = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cA - a.cA); }); }
-	else if (divCache.graphOptions.sortByCurrentMinimum = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cm - a.cm); }); }
-	else if (divCache.graphOptions.sortByCurrentMaximum = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cM - a.cM); }); }
-	else if (divCache.graphOptions.sortByCurrentSum = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cS - a.cS); }); }
-	else if (divCache.graphOptions.sortByCurrentCount = "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cN - a.cN); }); }
+	//if (divCache.graphOptions.showSeriesSummary) {
+		for (fullCounterName in divCache.seriesFound) {
+			var seriesObj = divCache.seriesFound[fullCounterName];
+
+			var summaryText = "<SPAN class='seriesSummary'>"
+			summaryText += "Sum: " + Math.round(100*seriesObj.S)/100 + "<br>"
+			summaryText += "Max: " + Math.round(100*seriesObj.M)/100 + "<br>"
+			summaryText += "Ave: " + Math.round(100*seriesObj.A)/100 + "<br>"
+			summaryText += "Min: " + Math.round(100*seriesObj.m)/100 + "<br>"
+			summaryText += "Count: " + Math.round(100*seriesObj.N)/100 + "<br>"
+			summaryText += "Stdev: " + Math.round(100*seriesObj.stdev)/100
+			summaryText += "</SPAN>";
+			seriesObj.summaryText = summaryText;
+/*
+			var summaryText = "<SPAN class='seriesSummary'>"
+			summaryText += "<table><tr><td></td><td>Total</td><td>Current</td></tr>";		
+			summaryText += "<tr><td>Sum</td><td>" + seriesObj.S + "</td><td>" + seriesObj.cS + "</td></tr>"
+			summaryText += "<tr><td>Max</td><td>" + seriesObj.M + "</td><td>" + seriesObj.cM + "</td></tr>"
+			summaryText += "<tr><td>Ave</td><td>" + seriesObj.A + "</td><td>" + seriesObj.cA + "</td></tr>"
+			summaryText += "<tr><td>Min</td><td>" + seriesObj.m + "</td><td>" + seriesObj.cm + "</td></tr>"
+			summaryText += "<tr><td>Count</td><td>" + seriesObj.N + "</td><td>" + seriesObj.cN + "</td></tr>"
+			summaryText += "<tr><td>Stdev</td><td>" + seriesObj.stdev + "</td><td>&nbsp;</td></tr>"
+			summaryText += "</table></SPAN>";
+			seriesObj.summaryText = summaryText;
+*/
+		}
+	//}
+
+
+		 if (divCache.graphOptions.sortByTotalAverage == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.A - a.A); }); }
+	else if (divCache.graphOptions.sortByTotalMinimum == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.m - a.m); }); }
+	else if (divCache.graphOptions.sortByTotalMaximum == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.M - a.M); }); }
+	else if (divCache.graphOptions.sortByTotalSum == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.S - a.S); }); }
+	else if (divCache.graphOptions.sortByTotalCount == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.N - a.N); }); }
+	else if (divCache.graphOptions.sortByCurrentAverage == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cA - a.cA); }); }
+	else if (divCache.graphOptions.sortByCurrentMinimum == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cm - a.cm); }); }
+	else if (divCache.graphOptions.sortByCurrentMaximum == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cM - a.cM); }); }
+	else if (divCache.graphOptions.sortByCurrentSum == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cS - a.cS); }); }
+	else if (divCache.graphOptions.sortByCurrentCount == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.cN - a.cN); }); }
 	else if (divCache.graphOptions.sortByDeviant == "desc") { divCache.seriesArr.sort(function(a,b) { return (b.stdev - a.stdev); }); }
-	else if (divCache.graphOptions.sortByTotalAverage = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.A - a.A); }); }
-	else if (divCache.graphOptions.sortByTotalMinimum = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.m - a.m); }); }
-	else if (divCache.graphOptions.sortByTotalMaximum = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.M - a.M); }); }
-	else if (divCache.graphOptions.sortByTotalSum = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.S - a.S); }); }
-	else if (divCache.graphOptions.sortByTotalCount = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.N - a.N); }); }
-	else if (divCache.graphOptions.sortByCurrentAverage = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cA - a.cA); }); }
-	else if (divCache.graphOptions.sortByCurrentMinimum = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cm - a.cm); }); }
-	else if (divCache.graphOptions.sortByCurrentMaximum = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cM - a.cM); }); }
-	else if (divCache.graphOptions.sortByCurrentSum = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cS - a.cS); }); }
-	else if (divCache.graphOptions.sortByCurrentCount = "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cN - a.cN); }); }
+	else if (divCache.graphOptions.sortByTotalAverage == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.A - a.A); }); }
+	else if (divCache.graphOptions.sortByTotalMinimum == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.m - a.m); }); }
+	else if (divCache.graphOptions.sortByTotalMaximum == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.M - a.M); }); }
+	else if (divCache.graphOptions.sortByTotalSum == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.S - a.S); }); }
+	else if (divCache.graphOptions.sortByTotalCount == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.N - a.N); }); }
+	else if (divCache.graphOptions.sortByCurrentAverage == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cA - a.cA); }); }
+	else if (divCache.graphOptions.sortByCurrentMinimum == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cm - a.cm); }); }
+	else if (divCache.graphOptions.sortByCurrentMaximum == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cM - a.cM); }); }
+	else if (divCache.graphOptions.sortByCurrentSum == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cS - a.cS); }); }
+	else if (divCache.graphOptions.sortByCurrentCount == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.cN - a.cN); }); }
 	else if (divCache.graphOptions.sortByDeviant == "asc") { divCache.seriesArr.sort(function(a,b) { return -(b.stdev - a.stdev); }); }
 	else { divCache.seriesArr.sort(function(s1,s2) { return (s1.label < s2.label ? -1 : 1); }); }
 
@@ -460,7 +494,7 @@ var drawGraph = function(graphDiv, labelsDiv, graphData, userOptions) {
 	
 	divCache.graphOptions.labels = divCache.labelArr;
 	divCache.graphOptions.colors = divCache.colorsArr;
-	divCache.graphOptions.valueRange = null;
+	//divCache.graphOptions.valueRange = null;
 	//if (divCache.graphOptions.stackedGraph) {
 	//} 	
 	/*  else if (graphOptions.valueRange != null) {
@@ -549,11 +583,11 @@ var populateTimeSlotArr = function(divCache, graphData) {
 			for (styleNum in divCache.graphOptions.lineStyles) {
 				var style = divCache.graphOptions.lineStyles[styleNum];
 				
-				if (style.color) {
-					seriesObj.color = style.color;
-				}
-
 				if (fullCounterName.match(style.match)) {
+					if (style.color) {
+						seriesObj.color = style.color;
+					}
+
 					for (key in style) {
 						defaultLineStyle[key] = style[key];
 					}
@@ -904,7 +938,8 @@ var populateTimeSlotArr = function(divCache, graphData) {
 		divCache.timeSlotArr[divCache.timeSlotArr.length - 2].length) {
 		debugger;
 	}
-	//}
+	
+	divCache.lastDate = lastDate;
 }
 
 function addPrediction(graphDiv, alpha, beta, gamma, period, m) {

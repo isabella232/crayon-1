@@ -1472,11 +1472,21 @@ staticAutoComplete["match"] = ' \
 ';
 
 staticAutoComplete["match2"] = ' \
-<div class="option"><a name="match"></a><b>match</b><br> \
+<div class="option"><a name="match2"></a><b>match2</b><br> \
   <a parentName="dataSource"></a>\
   <p> Used to match a second series line group to populate y2 when using the "projection" attribute. It is An object with either "name"/"component"/"server" properties which are regexes matching series properties accordingly.</p> \
   <i><span class="dyDescType">Type:</span> string or an object with a regex string </i><br> \
   <i><span class="dyDescType">Default:</span> null </i><p></p> \
+  <span class="dyDescType">Gallery Samples:</span> <font color="red">NONE</font><br> \
+  <span class="dyDescType">Other Examples:</span> <font color="red">NONE</font><br> \
+  <br> </div> \
+';
+staticAutoComplete["insteadOfMatches"] = ' \
+<div class="option"><a name="insteadOfMatches"></a><b>insteadOfMatches</b><br> \
+  <a parentName="dataSource"></a>\
+  <p>Should the matched metric&quot;s data points be removed form display if they are used in a context of an aggregation metric</p> \
+  <i><span class="dyDescType">Type:</span> boolean </i><br> \
+  <i><span class="dyDescType">Default:</span> false </i><p></p> \
   <span class="dyDescType">Gallery Samples:</span> <font color="red">NONE</font><br> \
   <span class="dyDescType">Other Examples:</span> <font color="red">NONE</font><br> \
   <br> </div> \
@@ -2186,6 +2196,24 @@ staticAutoComplete["legendWidth"] = ' \
   <p>Controls the width of the legend div</p> \
   <i><span class="dyDescType">Type:</span> integer </i><br> \
   <i><span class="dyDescType">Default:</span> 230 </i><p></p> \
+  <span class="dyDescType">Gallery Samples:</span> <font color="red">NONE</font><br> \
+  <span class="dyDescType">Other Examples:</span> <font color="red">NONE</font><br> \
+  <br> </div> \
+';
+staticAutoComplete["dataPointCount"] = ' \
+<div class="option"><a name="dataPointCount"></a><b>dataPointCount</b><br> \
+  <p>Used in calculated data source which is generated to indicate the amount of data points to generate</p> \
+  <i><span class="dyDescType">Type:</span> integer </i><br> \
+  <i><span class="dyDescType">Default:</span> 100 </i><p></p> \
+  <span class="dyDescType">Gallery Samples:</span> <font color="red">NONE</font><br> \
+  <span class="dyDescType">Other Examples:</span> <font color="red">NONE</font><br> \
+  <br> </div> \
+';
+staticAutoComplete["noLegend"] = ' \
+<div class="option"><a name="noLegend"></a><b>noLegend</b><br> \
+  <p>Indicates whether the legend should be removed from display (to the right of the graph)</p> \
+  <i><span class="dyDescType">Type:</span> boolean </i><br> \
+  <i><span class="dyDescType">Default:</span> false </i><p></p> \
   <span class="dyDescType">Gallery Samples:</span> <font color="red">NONE</font><br> \
   <span class="dyDescType">Other Examples:</span> <font color="red">NONE</font><br> \
   <br> </div> \

@@ -1,0 +1,141 @@
+{
+    "id": "ex_styles",
+    "sidebarText": "15. Styles",
+    "header": "Example: Using different visual styles (Also see <a href='http://dygraphs.com/options.html'>dygraph reference</a>)",
+    "graphs": [{
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }],
+        "graphOpts": {
+            "title": "All our series lines (No styling, full row)",
+            "width": 600,
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }],
+        "graphOpts": {
+            "title": "No Legend, stacked graph",
+            "width": 600,
+            "height": 100,
+            "noLegend": true,
+            "stackedGraph": true
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }],
+        "graphOpts": {
+            "title": "No Legend, per series styles",
+            "width": 600,
+            "height": 100,
+            "noLegend": true,
+            "lineStyles": [{
+                "match": "sinus",
+                "fillGraph": true,
+                "color": "red"
+            }, {
+                "match": "modulo",
+                "strokePattern": [10, 10],
+                "strokeColor": "orange",
+                "strokeWidth": 1
+            }, {
+                "match": "bitwiseAnd",
+                "drawPoints": true,
+                "strokeColor": "yellow",
+                "pointSize": 3
+            }]
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }],
+        "graphOpts": {
+            "title": "No Legend, specifying value range",
+            "width": 600,
+            "height": 100,
+            "noLegend": true,
+            "valueRange": [1, 4]
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "m%5",
+            "dataPointCount": 200,
+            "name": "modulo"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m&5",
+            "dataPointCount": 200,
+            "name": "bitwiseAnd"
+        }, {
+            "from": "last 60 minutes",
+            "projection": "Math.sin(m)*2.5+2.5",
+            "dataPointCount": 200,
+            "name": "sinus"
+        }],
+        "graphOpts": {
+            "title": "Custom zooming & panning",
+            "width": "wholeLine",
+            "height": 150,
+            "showRangeSelector": true,
+            "wholeWindow": false,
+            "dateWindowRatio": 0.3,
+            "noLegend": true
+        }
+    }]
+}

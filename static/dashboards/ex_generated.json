@@ -1,0 +1,73 @@
+{
+    "id": "ex_generated",
+    "sidebarText": "08. Generated Graphs",
+    "header": "Example: Showing Generated Graphs And Transformations",
+    "graphs": [{
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "1",
+            "dataPointCount": 20
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m",
+            "dataPointCount": 20
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m*m",
+            "dataPointCount": 20
+        }, {
+            "from": "last 60 minutes",
+            "name": "2^(m/10)",
+            "projection": "Math.pow(2,(m/10))",
+            "dataPointCount": 20
+        }, {
+            "from": "last 60 minutes",
+            "name": "log(m)",
+            "projection": "Math.log(m,2)",
+            "dataPointCount": 20
+        }],
+        "graphOpts": {
+            "title": "Complexities with 20 data points (Transforming data source)",
+            "width": "wholeLine",
+            "valueRange": [0, 60],
+            "drawPoints": true,
+            "pointSize": 4,
+            "height": 200,
+            "legendWidth": 300
+        }
+    }, {
+        "calculatedDataSources": [{
+            "from": "last 60 minutes",
+            "projection": "1",
+            "dataPointCount": 20
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m",
+            "dataPointCount": 5
+        }, {
+            "from": "last 60 minutes",
+            "projection": "m*m",
+            "dataPointCount": 5
+        }, {
+            "from": "last 60 minutes",
+            "name": "2^(m/10)",
+            "projection": "Math.pow(2,(m/10))",
+            "dataPointCount": 5
+        }, {
+            "from": "last 60 minutes",
+            "name": "log(m)",
+            "projection": "Math.log(m,2)",
+            "dataPointCount": 5
+        }],
+        "graphOpts": {
+            "title": "Complexities with 5 data points (Transforming data source)",
+            "width": "wholeLine",
+            "valueRange": [0, 60],
+            "drawPoints": true,
+            "pointSize": 4,
+            "height": 200,
+            "gapInMinutes": 60,
+            "legendWidth": 300
+        }
+    }]
+}

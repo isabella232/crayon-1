@@ -519,7 +519,13 @@ var loadDashboard = function() {
 				}
 			}
 
-			if (graph.dataSources == null || !graph.dataSources.length) {
+			var nonQueryables = 0;
+			if (graph.dataSources != null) {
+				for (var i=0;i<graph.dataSources.length; ++i) {
+					if (typeof graph.dataSources[i] == "string") nonQueryables++
+				}
+			}
+			if (graph.dataSources == null || !graph.dataSources.length || (graph.dataSources.length - nonQueryables) == 0) {
 				plotGraph([],graphToQuery); 
 			}
 			else if (shouldTail) {

@@ -1,0 +1,36 @@
+{
+    "id": "ex_gaps",
+    "sidebarText": "10. Handling Gaps",
+    "header": "Example: Handling Gaps in data",
+    "graphs": [{
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "gapInSeconds": 1,
+            "title": "Last 30 minutes CPU with 10 seconds interval whereas 1 second is considered a gap",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }, {
+        "dataSources": [{
+            "name": "Crayon_Host_CPU",
+            "unit": "r",
+            "from": "last 30 minutes",
+            "component": "crayon*",
+            "server": "$crayon-server"
+        }],
+        "graphOpts": {
+            "gapInSeconds": 20,
+            "title": "Last 30 minutes CPU with 10 seconds interval whereas 20 seconds are considered a gap",
+            "width": "wholeLine",
+            "height": 100,
+            "legendWidth": 300
+        }
+    }]
+}
