@@ -80,7 +80,7 @@ if (demoMode) {
 //Also email.server.connect is synchornous, so why use the callback pattern at all? just name it connectSync and eliminate the callback. 
 mail.connect(function(err) {
 	if (err) { 
-		logger.error("failed to initialize mail");
+		logger.fatal("failed to initialize mail");
 		return;
 	}
 
