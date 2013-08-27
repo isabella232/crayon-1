@@ -62,7 +62,7 @@ function runNextTest() {
 		var context = new TestContext(nextTest, runNextTest);
 		tests[nextTest](context);
 	} catch (ex) {
-		console.error(("Test " + testName + " failed with exception: \n" + ex.stack).colorRed());
+		console.error(("Test " + nextTest + " failed with exception: \n" + ex.stack).colorRed());
 	}
 }
 
