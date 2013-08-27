@@ -8,13 +8,15 @@ var crayonCustomLog = {
 	      "[DEBUG]": 0,
 	      "[INFO]": 1,
 	      "[WARN]": 2,
-	      "[ERROR]": 3
+	      "[ERROR]": 3,
+	      "[FATAL]": 4
 	    },
 	    colors: {
 	      "[DEBUG]": 'blue',
 	      "[INFO]": 'green',
 	      "[WARN]": 'yellow',
-	      "[ERROR]": 'red'
+	      "[ERROR]": 'red',
+	      "[FATAL]": 'red'
 	    },
 	    filename: __dirname+'/crayon.log' 
 	  };
@@ -31,26 +33,28 @@ var debug = function(str) {
 var error = function(str) {
 	if (typeof errorCallback == "function")
 		errorCallback();
-	//winston.error(str);
 	winston.log('[ERROR]', str);
 };
 
 var info = function(str) {
-	//winston.info(str);
 	winston.log('[INFO]', str);
 };
 
 var warn = function(str) {
-	//winston.warn(str);
 	winston.log('[WARN]', str);
+};
+
+var fatal = function(str) {
+	winston.log('[FATAL]', str);
+	process.exit(1);
 };
 
 function init() {
 	if (initialized) {
 		console.log("LOGGING INITIALIZED TWICE - SHOULD NEVER HAPPEN"); //node.js caches the modules, so the initialization code should only be called once by node.js
+		process.exit(1);
 		return;
 	}
-	
 	
 	winston.setLevels(crayonCustomLog.levels);
 	winston.addColors(crayonCustomLog.colors);
@@ -75,4 +79,5 @@ module.exports.debug = debug;
 module.exports.info = info;
 module.exports.error = error;
 module.exports.warn = warn;
+module.exports.fatal = fatal;
 module.exports.setErrorCallback = setErrorCallback;
