@@ -49,6 +49,10 @@ var validateTimeField = function(args, callContext) {
 	}
 };
 
+function cleanShellCharacters(str) {
+	return str.replace(/[ ;\/]/g,"_");
+}
+
 function queryDataSource(ds, callContext, onDatasourceQueryDone, args) {
 	try {
 		var now = new Date();
@@ -62,8 +66,12 @@ function queryDataSource(ds, callContext, onDatasourceQueryDone, args) {
 		if (ds.to) dateTo = ds.to.understandTime();		
 		var dateFromStr = dateFrom.toISOString().substring(0,19);
 		var dateToStr = dateTo.toISOString().substring(0,19);
-		var serverWildcard = ds.server || "*";
-		var componentWildcard = ds.component || "*";
+		var serverWildcard = cleanShellCharacters(ds.server || "*")
+		var componentWildcard = cleanShellCharacters(ds.component || "*");
+		if (ds.originalIndex) ds.originalIndex = cleanShellCharacters(ds.originalIndex);
+		if (ds.name) ds.name = cleanShellCharacters(ds.name);
+		if (ds.exclude) ds.exclude = cleanShellCharacters(ds.exclude);
+
 		var maxBufferMB = ds.bufferMB || 4;
 
 		var dateCursor = dateFrom;
@@ -642,8 +650,9 @@ module.exports.matchSeriesName = function(callContext) {
 		return;
 	}
 
-	var limit = callContext.args.limit || 5;
-	var regex = callContext.args.regex;
+	if (ds.exclude) ds.exclude = cleanShellCharacters(ds.exclude);
+	var limit = cleanShellCharacters(callContext.args.limit || "5");
+	var regex = cleanShellCharacters(callContext.args.regex || "");
 	var planSeed = Math.round(Math.random()*99999999);
 	var plan =  "ls minutes_ram/*/*/* | xargs -n 1 -P 10 -I {} " +
 		"./synced_egrep.sh " + planSeed + " '-' {} '" + regex + "'" + 
