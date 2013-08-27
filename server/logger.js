@@ -2,7 +2,7 @@
 //multiple options are here - https://github.com/joyent/node/wiki/modules#wiki-logs
 //Winston seems to have what a "real" server app really requires - https://github.com/flatiron/winston
 
-var sys = require("sys"); //TODO:REVIEW replace sys with util
+var sys = require("util"); 
 var countersLib = require("./counter.js");
 
 // Keep a counter of errors

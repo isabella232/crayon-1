@@ -29,7 +29,7 @@ countersLib.setCrayonId(serverPort);
 //See http://www.futurealoof.com/posts/nodemodules-in-git.html
 
 // Imports
-var sys = require("sys"); //TODO:REVIEW the sys module is deprecated. "util" replaces it. Need to grep all the source and change it.
+var sys = require("util"); 
 var http = require("http");  
 var path = require("path");
 var fs = require("fs");

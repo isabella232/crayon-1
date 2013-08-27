@@ -1,4 +1,4 @@
-var sys = require("sys");
+var sys = require("util");
 var my_http = require("http");  
 var path = require("path");
 var fs = require("fs");
