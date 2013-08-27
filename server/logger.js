@@ -46,8 +46,11 @@ var warn = function(str) {
 };
 
 function init() {
-	if (initialized)
+	if (initialized) {
+		console.log("LOGGING INITIALIZED TWICE - SHOULD NEVER HAPPEN"); //node.js caches the modules, so the initialization code should only be called once by node.js
 		return;
+	}
+	
 	
 	winston.setLevels(crayonCustomLog.levels);
 	winston.addColors(crayonCustomLog.colors);
