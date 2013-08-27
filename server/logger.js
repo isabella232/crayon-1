@@ -1,8 +1,8 @@
-var countersLib = require("./counter.js");
+//var countersLib = require("./counter.js");
 var winston = require('winston');
 
 // Keep a counter of errors
-var errorCounter = countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "Errors Logged", "crayon");
+var errorCallback;
 var crayonCustomLog = {
 	    levels: {
 	      "[DEBUG]": 0,
@@ -20,12 +20,17 @@ var crayonCustomLog = {
 	  };
 var initialized = false;
 
+function setErrorCallback(cb) {
+	errorCallback = cb;
+}
+
 var debug = function(str) {
 	winston.log('[DEBUG]', str);
 };
 
 var error = function(str) {
-	errorCounter.increment();
+	if (typeof errorCallback == "function")
+		errorCallback();
 	//winston.error(str);
 	winston.log('[ERROR]', str);
 };
@@ -67,3 +72,4 @@ module.exports.debug = debug;
 module.exports.info = info;
 module.exports.error = error;
 module.exports.warn = warn;
+module.exports.setErrorCallback = setErrorCallback;

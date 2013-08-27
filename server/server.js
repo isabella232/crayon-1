@@ -1,3 +1,5 @@
+var logger = require("./logger.js");
+
 // Global members
 var serverPort = 54321;
 var isJobManager = false;
@@ -24,6 +26,16 @@ console.log("Hostname: " + hostname); //TODO:REVIEW - change to logger
 var countersLib = require("./counter.js");
 countersLib.setHostname(hostname);
 countersLib.setCrayonId(serverPort);
+var errorCounter = countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "Errors Logged", "crayon");
+
+logger.setErrorCallback(function() {
+	try {
+		errorCounter.increment();
+	}
+	catch (ex) {
+		logger.error("caught exception on error counter: "+ex);
+	}
+});
 
 //TODO:REVIEW we should probably commit to git (at least for the production servers) node_modules
 //See http://www.futurealoof.com/posts/nodemodules-in-git.html
@@ -33,7 +45,6 @@ var sys = require("util");
 var http = require("http");  
 var path = require("path");
 var fs = require("fs");
-var logger = require("./logger.js");
 var contextLib = require("./callContext.js");
 var measurements = require("./measurements.js");
 var dashboards = require("./dashboards.js");
@@ -44,6 +55,7 @@ var pluginManager = new (require("./pluginManager.js").PluginManager)(logger,con
 var JobManager = require("./jobManager.js").JobManager;
 var mail = require("./crayonMail.js");
 var rabbitmq = require("./rabbitmq-util.js");
+
 
 
 //TODO:REVIEW cosmetic - either use an init function per module (instead of multiple functions), or use a global config object that everyone uses and rely on node.js module caching
@@ -57,6 +69,7 @@ dashboards.setContextLib(contextLib);
 thresholds.setLogger(logger);
 thresholds.setContextLib(contextLib);
 
+ 
 // Init sub modules
 pluginManager.loadPlugins();
 
