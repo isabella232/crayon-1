@@ -3,6 +3,7 @@ var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
 var fs = require('fs');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var cityhash = require("cityhash");
 var configLib = require("./configuration.js");
 var request = require('request');
@@ -137,8 +138,7 @@ function queryDataSource(ds, callContext, onDatasourceQueryDone, args) {
 
 		var execConfig = {
 		    maxBuffer: maxBufferMB * 1024 * 1024,
-		    env: {
-		    }
+		    env: process.env
 		};
 
 		function executePlan(plan, config, callback) {
@@ -650,34 +650,73 @@ module.exports.matchSeriesName = function(callContext) {
 		return;
 	}
 
-	if (ds.exclude) ds.exclude = cleanShellCharacters(ds.exclude);
+	
+	if (callContext.args.regex == "*") callContext.args.regex = ".*";
+
 	var limit = cleanShellCharacters(callContext.args.limit || "5");
 	var regex = cleanShellCharacters(callContext.args.regex || "");
 	var planSeed = Math.round(Math.random()*99999999);
-	var plan =  "ls minutes_ram/*/*/* | xargs -n 1 -P 10 -I {} " +
-		"./synced_egrep.sh " + planSeed + " '-' {} '" + regex + "'" + 
-		"| awk '{if (a[$1] == null && NF > 2) {a[$1]=1; print $1; g += 1; b = 0} else { b += 1 } if (g >= " + limit + " || (g >= 1 && b > 50)) { print \"awkterminating\" }}' " + 
-		"| head -" + limit + " | grep -v awkterminating";
-
-	plan += "; rm -f /tmp/crayon-query-" + planSeed + ".lck";
+	
+	var plan = "/bin/bash -i -c './find-metric.sh 10 " + planSeed + " \"" + regex + "\"  " + limit + "; exit'";
+	
+	//var plan = 'ssh 127.0.0.1 "cd $(pwd); ./find-metric.sh 10 ' + planSeed + ' \'' + regex + '\'  ' + limit + '"';
+	//var plan =  "ls minutes_ram/*/*/* | xargs -n 1 -P 10 -I {} " +
+	//	"./synced_egrep.sh " + planSeed + " '-' {} '" + regex + "'" + 
+	//	"| awk '{if (a[$1] == null && NF > 2) {a[$1]=1; print $1; g += 1; b = 0} else { b += 1 } if (g >= " + limit + " || (g >= 1 && b > 50)) { print \"awkterminating\" }}' " + 
+	//	"| head -1000 | grep -v awkterminating | head -" + limit;
+//
+	//plan += "; rm -f /tmp/crayon-query-" + planSeed + ".lck";
 	logger.info("Executing match series name: " + plan.colorBlue());
-	var maxBufferMB = 10;
+	var maxBufferMB = 1;
 	var execConfig = {
 	    maxBuffer: maxBufferMB * 1024 * 1024,
-	    env: {
-	    }
+	    env: process.env
 	};
+
+/*
+    var spawned = spawn("./find-metric.sh",["10",  planSeed.toString(), regex, limit.toString()]);
+    var handleSpawned = function(s) {
+    	s.dataArr = [];
+
+    	s.stdout.on('data', function (data) {
+		  s.dataArr.push(data);
+		});
+
+    	var queryOver = function() {
+    		if (s.dataCombined) return;
+    		s.dataCombined = s.dataArr.join("");
+    		callContext.respondText(200, s.dataCombined||"");
+    	}
+
+		s.stderr.on('data', function (data) {
+			s.kill("SIGHUP");
+		  	queryOver();
+		});
+
+		s.on('close', function (code) {
+		  	queryOver();
+		});
+    }
+    handleSpawned(spawned);
+*/
 
 	exec(plan, execConfig, function(error, out, err) {  
 
 		// If we failed querying
-		if (error) {
-			callContext.respondText(200, "No metric found");
-			return;
+		//if (error) {
+		//	callContext.respondText(200, "No metric found");
+		//	return;
+		//}
+
+		if (out == null) {
+			logger.debug("0 Metrics found");
+		} else {
+			logger.debug(out.split('\n').length + " Metrics found");
 		}
 
 		callContext.respondText(200, out||"");
 	});
+
 };
 
 module.exports.addAggregate = addAggregate;

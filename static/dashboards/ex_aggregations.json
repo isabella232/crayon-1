@@ -79,6 +79,7 @@
                 "name": "bitwise.*"
             },
             "aggregationFunction": "sum",
+            "projection": "y-y2",
             "insteadOfMatches": true,
             "name": "modulo+sinus-bitwiseAnd"
         }],
