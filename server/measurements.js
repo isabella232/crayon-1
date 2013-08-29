@@ -1,3 +1,4 @@
+var logger = require("./logger.js");
 var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
@@ -10,9 +11,7 @@ var request = require('request');
 var zlib = require('zlib');
 
 // Set the global services for this module
-var logger;
 var contextLib;
-module.exports.setLogger = function(l) { logger = l; };
 module.exports.setContextLib = function(l) { contextLib = l; };
 
 // Converts the time field in the arguments to a valid date object
@@ -634,11 +633,11 @@ function combineRows(existingRow, newRow) {
 	combinedRow.V = combinedRow.V || 0;
 			
 	// For debugging purposes this often helps a lot
-	if (false) { //TODO:REVIEW - change to logger
-		console.log("===============");
-		console.log("COMBINED: " + JSON.stringify(combinedRow));
-		console.log("NEW: " + JSON.stringify(newRow));
-		console.log("EXISTING: " + JSON.stringify(existingRow));
+	if (false) { 
+		logger.debug("===============");
+		logger.debug("COMBINED: " + JSON.stringify(combinedRow));
+		logger.debug("NEW: " + JSON.stringify(newRow));
+		logger.debug("EXISTING: " + JSON.stringify(existingRow));
 	}
 
 	return combinedRow;

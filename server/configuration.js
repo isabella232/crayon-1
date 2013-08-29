@@ -1,7 +1,8 @@
 var fs = require('fs');
+var logger = require("./logger.js");
+
 var config = {};
-var logger;
-module.exports.setLogger = function(l) { logger = l; };
+
 module.exports.getConfig = function() { return config; };
 module.exports.setConfigValue = function(name, value) { config[name] = value; };
 module.exports.setConfig = function(configText) {
@@ -13,7 +14,7 @@ module.exports.setConfig = function(configText) {
 			configText = JSON.stringify(configText);
 		}
 
-		console.log(configText); //TODO:REVIEW - change to logger
+		logger.info(configText); 
 		config = JSON.parse(configText);
 		logger.info("Configuration changed: \n" + JSON.stringify(config));
 		saveConfigToDisk(configText);

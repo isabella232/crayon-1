@@ -1,3 +1,5 @@
+var logger = require("./logger.js");
+
 var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
@@ -5,9 +7,7 @@ var fs = require('fs');
 var staticDir = __dirname + '/../static';
 
 // Set the global services for this module
-var logger;
 var contextLib;
-module.exports.setLogger = function(l) { logger = l; };
 module.exports.setContextLib = function(l) { contextLib = l; };
 
 
@@ -32,14 +32,14 @@ module.exports.deleteDashboard = function(callContext) {
 	fs.unlink(staticDir + newPath, function(err) { //TODO:REVIEW need to use path.join and then check that it is still under /dashboards/ . critical.
     	if(err) {
 	        callContext.respondJson(500,{error:"Failed removing dashboard from '" + newPath + "':" + err});
-	      //TODO:REVIEW add logging
+	        logger.error("failed to unlink "+newPath+": "+err);
 	        return;
 	    } 
 
 		fs.writeFile(staticDir + "/dashboards/dashboards.conf", newConfText, function(err) {
 		    if(err) {
 		        callContext.respondJson(500, {error:"Failed saving dashboards.conf: " + err});
-		      //TODO:REVIEW add logging
+		        logger.error("Failed saving dashboards.conf: " + err);
 		        return;
 		    } 
 
@@ -76,14 +76,14 @@ module.exports.saveDashboard = function(callContext) {
 	fs.writeFile(staticDir + newPath, dashboardText, function(err) { //TODO:REVIEW need to use path.join and then check that it is still under /dashboards/ . critical.
     	if(err) {
 	        callContext.respondJson(500,{error:"Failed saving dashboard to '" + newPath + "':" + err});
-	      //TODO:REVIEW add logging
+	        logger.error("Failed saving dashboard to '" + newPath + "':" + err);
 	        return;
 	    } 
 
 		fs.writeFile(staticDir + "/dashboards/dashboards.conf", newConfText, function(err) { 
 		    if(err) {
 		        callContext.respondJson(500, {error:"Failed saving dashboards.conf: " + err});
-		      //TODO:REVIEW add logging
+		        logger.error("Failed saving dashboards.conf: " + err);
 		        return;
 		    } 
 

@@ -1,37 +1,82 @@
-//TODO:REVIEW synchronous outputting to the console should be eliminated and instead replaced by evented/async output to a file
-//multiple options are here - https://github.com/joyent/node/wiki/modules#wiki-logs
-//Winston seems to have what a "real" server app really requires - https://github.com/flatiron/winston
-
-var sys = require("sys"); //TODO:REVIEW replace sys with util
-var countersLib = require("./counter.js");
+var winston = require('winston');
 
 // Keep a counter of errors
-var errorCounter = countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "Errors Logged", "crayon");
+var errorCallback;
+var crayonCustomLog = {
+	    levels: {
+	      "[DEBUG]": 0,
+	      "[INFO]": 1,
+	      "[WARN]": 2,
+	      "[ERROR]": 3,
+	      "[FATAL]": 4
+	    },
+	    colors: {
+	      "[DEBUG]": 'blue',
+	      "[INFO]": 'green',
+	      "[WARN]": 'yellow',
+	      "[ERROR]": 'red',
+	      "[FATAL]": 'red'
+	    },
+	    filename: __dirname+'/crayon.log' 
+	  };
+var initialized = false;
 
-// The log date prefix for each record
-var getLogDate = function() {
-	var t = new Date();
-	return t.toISOString();
-};
+function setErrorCallback(cb) {
+	errorCallback = cb;
+}
 
 var debug = function(str) {
-	sys.puts("[" + getLogDate() + "] [DEBUG] " + str);
+	winston.log('[DEBUG]', str);
 };
 
 var error = function(str) {
-	errorCounter.increment();
-	sys.puts(("[" + getLogDate() + "] [ERROR] " + str).colorRed());
+	if (typeof errorCallback == "function")
+		errorCallback();
+	winston.log('[ERROR]', str);
 };
 
 var info = function(str) {
-	sys.puts("[" + getLogDate() + "] [INFO] " + str);
+	winston.log('[INFO]', str);
 };
 
 var warn = function(str) {
-	sys.puts(("[" + getLogDate() + "] [WARN] " + str).colorYellow());
+	winston.log('[WARN]', str);
 };
+
+var fatal = function(str) {
+	winston.log('[FATAL]', str);
+	process.exit(1);
+};
+
+function init() {
+	if (initialized) {
+		console.log("LOGGING INITIALIZED TWICE - SHOULD NEVER HAPPEN"); //node.js caches the modules, so the initialization code should only be called once by node.js
+		process.exit(1);
+		return;
+	}
+	
+	winston.setLevels(crayonCustomLog.levels);
+	winston.addColors(crayonCustomLog.colors);
+	winston.remove(winston.transports.Console);
+	winston.add(winston.transports.Console, {level: '[DEBUG]', timestamp: 'true', colorize: 'true'});
+	winston.add(winston.transports.File, {
+	    filename: crayonCustomLog.filename,
+	    handleExceptions: true,
+	    timestamp: true,
+	    json: false,
+	    level: '[DEBUG]',
+	    colorize: false,
+	    maxsize: 10000000,
+	    maxFiles: 10
+	  });
+	initialized = true;
+}
+
+init();
 
 module.exports.debug = debug;
 module.exports.info = info;
 module.exports.error = error;
 module.exports.warn = warn;
+module.exports.fatal = fatal;
+module.exports.setErrorCallback = setErrorCallback;
