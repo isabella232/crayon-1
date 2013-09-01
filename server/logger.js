@@ -17,9 +17,68 @@ var crayonCustomLog = {
 	      "[ERROR]": 'red',
 	      "[FATAL]": 'red'
 	    },
-	    filename: __dirname+'/crayon.log' 
 	  };
+
 var initialized = false;
+var consoleLog = true;
+var fileLog = false;
+var logFilename = __dirname+"/crayon.log";
+
+function config(toConsole, toFile, filename) {
+	if (typeof toConsole == "boolean")
+		consoleLog = toConsole;
+	if (typeof toFile == "boolean")
+		fileLog = toFile;
+	if (typeof filename == "string")
+		logFilename = __dirname+"/"+filename;
+	
+	winston.setLevels(crayonCustomLog.levels);
+	winston.addColors(crayonCustomLog.colors);
+	
+	try {
+		if (consoleLog) {
+			try {
+				winston.remove(winston.transports.Console);
+			}
+			catch (ex) { //ignore removal error - workaround for winston issue
+			}
+			winston.add(winston.transports.Console, {level: '[DEBUG]', timestamp: 'true', colorize: 'true'});
+		}
+		else {
+			winston.remove(winston.transports.Console);
+		}
+	}
+	catch (ex) {
+		console.log("error configuring winston console "+ex);
+	}
+	
+	try {
+		if (fileLog) {
+			try {
+				winston.remove(winston.transports.File);
+			}
+			catch (ex) { //ignore removal error - workaround for winston issue
+			}
+			winston.add(winston.transports.File, {
+			    filename: logFilename,
+			    handleExceptions: true,
+			    timestamp: true,
+			    json: false,
+			    level: '[DEBUG]',
+			    colorize: false,
+			    maxsize: 10000000,
+			    maxFiles: 10
+			  });
+		}
+		else {
+			winston.remove(winston.transports.File);
+		}
+	}
+	catch (ex) {
+		console.log("error configuring winston log file "+ex);
+	}
+	
+}
 
 function setErrorCallback(cb) {
 	errorCallback = cb;
@@ -55,20 +114,8 @@ function init() {
 		return;
 	}
 	
-	winston.setLevels(crayonCustomLog.levels);
-	winston.addColors(crayonCustomLog.colors);
-	winston.remove(winston.transports.Console);
-	winston.add(winston.transports.Console, {level: '[DEBUG]', timestamp: 'true', colorize: 'true'});
-	winston.add(winston.transports.File, {
-	    filename: crayonCustomLog.filename,
-	    handleExceptions: true,
-	    timestamp: true,
-	    json: false,
-	    level: '[DEBUG]',
-	    colorize: false,
-	    maxsize: 10000000,
-	    maxFiles: 10
-	  });
+	config(); //using defaults
+	
 	initialized = true;
 }
 
@@ -80,3 +127,4 @@ module.exports.error = error;
 module.exports.warn = warn;
 module.exports.fatal = fatal;
 module.exports.setErrorCallback = setErrorCallback;
+module.exports.config = config;

@@ -8,6 +8,9 @@ var hostname = require("os").hostname();
 var portForGraphiteFormat = null;
 var noAggregations = false;
 var demoMode = false;
+var consoleLog = true;
+var fileLog = false;
+var logFilename = "crayon.log";
 
 for (var argIndex in process.argv) {
 	var arg = process.argv[argIndex];
@@ -17,8 +20,11 @@ for (var argIndex in process.argv) {
 	if (arg.indexOf("--noAggregations") === 0) noAggregations = true;
 	if (arg.indexOf("--uiOnly") === 0) uiOnly = true;
 	if (arg.indexOf("--demoMode") === 0) { demoMode = true; noAggregations = true; }
+	if (arg.indexOf("--noconsole") === 0) { consoleLog = false; }
+	if (arg.indexOf("--logfile") === 0) { fileLog = true; logFilename = arg.substring("--logfile=".length);	}
 }
 
+logger.config(consoleLog, fileLog, logFilename);
 logger.info(process.argv); 
 logger.info("Hostname: " + hostname); 
 
