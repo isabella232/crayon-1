@@ -5,6 +5,7 @@ var measurements = require("./measurements.js");
 var configLib = require("./configuration.js");
 var net = require('net');
 var countersLib = require("./counter.js");
+var util = require("util.js");
 
 var graphiteMessagesCounter = countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "graphite API messages", "crayon");
 
@@ -26,8 +27,10 @@ module.exports.init = function(portForGraphiteFormat) {
 					logger.error("Failed handling graphite message (during receive): " + ex.stack);
 				}
 			});
-			
-			//TODO:REVIEW - add socket.on('error') for logging and error handling purposes
+						
+			socket.on('error', function(err) {
+				logger.error("socket error occored (graphite) "+util.inspect(err));
+			});
 
 			socket.on('close', function() {
 				try {
