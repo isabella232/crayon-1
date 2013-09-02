@@ -23,8 +23,11 @@ function CallContext(req, res) {
 		me.remoteIP = req.socket.remoteAddress;
 	} else if (req.headers && req.headers["x-real-ip"]) {
 		me.remoteIP = req.headers["x-real-ip"];
-	}	
-	//TODO:REVIEW:- missing "else". what if none of the above is true?
+	}
+	else {
+		logger.warn("could not find remote IP address");
+	}
+	
 
 	// Parse request query args (not post body yet)
 	var urlObj = url.parse(me.request.url); //TODO:REVIEW: if a URL contains .. we should reject the request. This is critical.
