@@ -7,6 +7,7 @@ var countersLib = require("./counter.js");
 var configLib = require("./configuration.js");
 var staticDir = __dirname + '/../static';
 var logger = require("./logger.js");
+var urlUtils = require("./url-utils.js");
 
 // Constructor for each client call. This object is passed as a token between most functions
 function CallContext(req, res) {
@@ -30,7 +31,7 @@ function CallContext(req, res) {
 	
 
 	// Parse request query args (not post body yet)
-	var urlObj = url.parse(me.request.url); //TODO:REVIEW: if a URL contains .. we should reject the request. This is critical.
+	var urlObj = url.parse(me.request.url); 
 	me.uri = urlObj.pathname;
 	if (me.uri == "/") {
 		me.uri = configLib.getConfig().homePage;
@@ -308,12 +309,20 @@ CallContext.prototype.getRequestedFile = function() {
 
 	// Mark this request as a file serving
 	me.isFileServing = true;
+	var base = null;
 	if (me.uri.indexOf("/plugins/") == 0) {
-		me.filename = path.join(__dirname, me.uri);
+		base = __dirname;
 	} else {
-		me.filename = path.join(staticDir, me.uri);
+		base = staticDir;
 	}
-	//TODO:REVIEW - the result path must be verified after join - that is under __dirname or staticDir. This is critical.
+	
+	me.filename = path.join(base, me.uri);
+	
+	if (!urlUtils.validateUrlString(me.filename, base)) {
+		callContext.respondText(401, "illegal URL");
+		logger.error("illegal URL: " + me.filename);
+		return;
+	}
 
 	// Check for the file to serve's existnace
 	path.exists(me.filename, function(exists) {

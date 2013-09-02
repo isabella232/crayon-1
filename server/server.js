@@ -58,6 +58,8 @@ var pluginManager = new (require("./pluginManager.js").PluginManager)(logger,con
 var JobManager = require("./jobManager.js").JobManager;
 var mail = require("./crayonMail.js");
 var rabbitmq = require("./rabbitmq-util.js");
+var urlUtils = require("./url-utils.js");
+
 
 measurements.setContextLib(contextLib);
 dashboards.setContextLib(contextLib);
@@ -90,6 +92,13 @@ mail.connect(function(err) {
 		
 		//logger.info("Got request: [" + (request.method||"NoMethod") + "] " + request.url.colorBlue());
 		var callContext = new contextLib.CallContext(request, response);
+		
+		//security check for URL validity
+		if (!urlUtils.validateUrlString(callContext.uri)) {
+			callContext.respondText(401, "illegal URL");
+			logger.error("illegal URL: " + callContext.uri);
+			return;
+		}
 
 		callContext.parseArgs(function(err) {
 			if (err) {
