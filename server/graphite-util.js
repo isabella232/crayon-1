@@ -5,7 +5,7 @@ var measurements = require("./measurements.js");
 var configLib = require("./configuration.js");
 var net = require('net');
 var countersLib = require("./counter.js");
-var util = require("util.js");
+var util = require("util");
 
 var graphiteMessagesCounter = countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "graphite API messages", "crayon");
 
