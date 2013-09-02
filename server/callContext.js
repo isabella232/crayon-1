@@ -214,7 +214,7 @@ CallContext.prototype.numberifyArg = function(arg, index) {
  		me.respondText(400, "Failed parsing argument '" + arg + "': " + ex);
  		return false;
  	}
-}
+};
 
 // Parsing the arguments whether they are of a get request or a post request alike
 CallContext.prototype.parseArgs = function(callback) {
@@ -284,24 +284,30 @@ CallContext.prototype.parseArgs = function(callback) {
 		// Notify completion
 		callback(null);
 	}
-}
+};
+
+var mimeTypes = {
+		".js": "text/javascript", 
+		".html": "text/html",
+		".htm": "text/html",
+		".txt": "text/plain",
+		".json": "text/json",
+		".conf": "text/html",
+		".ico": "image/x-icon",
+		".gif": "image/gif",
+		".jpg": "image/jpg", 
+		".png": "image/png", 
+		".css": "text/css"
+};
 
 // Get the proper mime type for our files (we don't use that many in our server)
 var getEndingContentType = function(filename){
-	//TODO:REVIEW: - better to extract the extension once and then use a Hash / Associative array to get the mime type
-	if (filename.endsWith(".js")) return "text/javascript"; 
-	else if (filename.endsWith(".html")) return "text/html";
-	else if (filename.endsWith(".htm"))  return "text/html";
-	else if (filename.endsWith(".txt"))  return "text/plain";
-	else if (filename.endsWith(".json")) return "text/json";
-	else if (filename.endsWith(".conf")) return "text/html";
-	else if (filename.endsWith(".ico"))  return "image/x-icon";
-	else if (filename.endsWith(".gif"))  return "image/gif";
-	else if (filename.endsWith(".jpg"))  return "image/jpg"; 
-	else if (filename.endsWith(".png"))  return "image/png"; 
-	else if (filename.endsWith(".css"))  return "text/css"; 
-	return null;
-}
+	var ext = path.extname(filename);
+	var rt = mimeTypes[ext];
+	if (typeof rt != "string")
+		return null;
+	return rt;
+};
 
 // Serve the file requested with support for 304 not modified
 CallContext.prototype.getRequestedFile = function() {
@@ -398,7 +404,7 @@ CallContext.prototype.getRequestedFile = function() {
 			});
 		});
 	});
-}
+};
 
 module.exports.mockCallContext = function(requestUrl, onEnd, args) {
 	var me=this;
@@ -421,7 +427,7 @@ module.exports.mockCallContext = function(requestUrl, onEnd, args) {
 	if (args != null) callContext.args = args;
 	callContext.verbose = false;
 	return callContext;
-}
+};
 
 
 module.exports.CallContext = CallContext;
