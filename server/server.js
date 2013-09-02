@@ -43,9 +43,6 @@ logger.setErrorCallback(function() {
 	}
 });
 
-//TODO:REVIEW we should probably commit to git (at least for the production servers) node_modules
-//See http://www.futurealoof.com/posts/nodemodules-in-git.html
-
 // Imports
 var sys = require("util"); 
 var http = require("http");  
@@ -61,9 +58,6 @@ var pluginManager = new (require("./pluginManager.js").PluginManager)(logger,con
 var JobManager = require("./jobManager.js").JobManager;
 var mail = require("./crayonMail.js");
 var rabbitmq = require("./rabbitmq-util.js");
-
-//TODO:REVIEW cosmetic - either use an init function per module (instead of multiple functions), or use a global config object that everyone uses and rely on node.js module caching
-// Pass global instances to sub modules
 
 measurements.setContextLib(contextLib);
 dashboards.setContextLib(contextLib);
