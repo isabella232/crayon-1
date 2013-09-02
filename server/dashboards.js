@@ -5,9 +5,9 @@ var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
 var fs = require('fs');
 var urlUtils = require("./url-utils.js");
+var path = require("path");
 
-
-var staticDir = __dirname + '/../static';
+var staticDir = path.normalize(__dirname + '/../static');
 var dashboardsDir = "/dashboards/";
 var dsahboardsConf = staticDir + dashboardsDir + "dashboards.conf";
 

@@ -3,7 +3,9 @@ var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
 var fs = require('fs');
-var staticDir = __dirname + '/../static';
+var path = require("path");
+
+var staticDir = path.normalize(__dirname + '/../static');
 
 // Set the global services for this module
 var contextLib;

@@ -5,7 +5,9 @@ var countersLib = require("./counter.js");
 var mail = require("./crayonMail.js");
 var exec = require('child_process').exec;
 var fs = require('fs');
-var staticDir = __dirname + '/../static';
+var path = require("path");
+
+var staticDir = path.normalize(__dirname + '/../static');
 var minutesDelayLagAssuranceForAggregation = 1;
 var cpuCounter = null;
 var rawRemainingRamCounter = null;

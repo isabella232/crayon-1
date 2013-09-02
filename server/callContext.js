@@ -1,11 +1,11 @@
-var urlUtils = require("url");
 var path = require("path");
 var fs = require("fs");
 var url = require("url");
 var zlib = require('zlib');
 var countersLib = require("./counter.js");
 var configLib = require("./configuration.js");
-var staticDir = __dirname + '/../static';
+var path = require("path");
+var staticDir = path.normalize(__dirname + '/../static');
 var logger = require("./logger.js");
 var urlUtils = require("./url-utils.js");
 
@@ -266,7 +266,7 @@ CallContext.prototype.parseArgs = function(callback) {
 	} else {
 
 		// Parse the get query arguments line
-		var urlObj = urlUtils.parse(request.url);
+		var urlObj = url.parse(request.url);
 		if (urlObj.query && urlObj.query.length > 0) {
 			
 			// Split the query line to key value strings
@@ -319,7 +319,7 @@ CallContext.prototype.getRequestedFile = function() {
 	me.filename = path.join(base, me.uri);
 	
 	if (!urlUtils.validateUrlString(me.filename, base)) {
-		callContext.respondText(401, "illegal URL");
+		me.respondText(401, "illegal URL");
 		logger.error("illegal URL: " + me.filename);
 		return;
 	}
