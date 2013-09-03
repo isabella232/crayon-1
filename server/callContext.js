@@ -76,14 +76,10 @@ CallContext.prototype.respondWithHeaders = function(code, headers, msg, msgType)
 
 		// get total request time in ms
 		var requestMs = new Date().getTime() - me.startTime;
+		
+		countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "API call ms to " + me.uri, "crayon").addSample(requestMs);
+		
 
-		// Log the request time and publish it using counters
-		if (!me.isFileServing) {
-			//logger.debug("API call to " + me.uri.colorBlue() + " took " + (requestMs + "ms").colorMagenta());
-			countersLib.getOrCreateCounter(countersLib.systemCounterDefaultInterval, "API call ms to " + me.uri, "crayon").addSample(requestMs);
-		} else {
-			logger.debug("Serving of file " + me.uri.colorBlue() + " took " + (requestMs + "ms").colorMagenta());
-		}
 
 		// Log errors
 		if (code >= 400) {
@@ -166,6 +162,38 @@ CallContext.prototype.respondWithHeaders = function(code, headers, msg, msgType)
 CallContext.prototype.respondJson = function(code, msg, headers) { this.respondWithHeaders(code, headers || {"Content-Type": "text/json"}, msg); };
 CallContext.prototype.respondText = function(code, msg, headers) { this.respondWithHeaders(code, headers || {"Content-Type": "text/plain"}, msg); };
 CallContext.prototype.respondBinary = function(code, msg, headers) { this.respondWithHeaders(code, headers, msg, "binary"); };
+
+CallContext.prototype.respondFile = function(code, headers) {
+	var me = this;
+	if (!me.isFileServing || me.filename == null) {
+		me.respondText(500, "internal server error");
+		logger.error("no file name");
+		return;
+	}
+
+	logger.debug("Serving of file " + me.uri.colorBlue());
+	var raw = fs.createReadStream(me.filename);
+	var acceptEncoding = me.request.headers['accept-encoding'];
+	if (!acceptEncoding) {
+		acceptEncoding = '';
+	}
+
+	if (acceptEncoding.match(/\bdeflate\b/)) {
+		headers['content-encoding'] = 'deflate';
+		me.response.writeHead(code, headers);
+		raw.pipe(zlib.createDeflate()).pipe(me.response);
+	} else if (acceptEncoding.match(/\bgzip\b/)) {
+		headers['content-encoding'] = 'gzip';
+		me.response.writeHead(code, headers);
+		raw.pipe(zlib.createGzip()).pipe(me.response);
+	} else {
+		me.response.writeHead(code, headers);
+		raw.pipe(me.response);
+	}
+
+	return;
+};
+
 
 // Convert the argument to json and abort request if it's not
 CallContext.prototype.jsonifyArg = function(arg) {
@@ -338,7 +366,7 @@ CallContext.prototype.getRequestedFile = function() {
 	}
 
 	// Check for the file to serve's existnace
-	path.exists(me.filename, function(exists) {
+	fs.exists(me.filename, function(exists) {
 		if(!exists) {
 			logger.error("Requested file (" + me.filename + ") was not found");  
 			me.respondText(404, "404 Not Found\n");
@@ -364,7 +392,7 @@ CallContext.prototype.getRequestedFile = function() {
 				"Content-Type": contentType, 
 				"Last-Modified": stat.mtime,
 				"ETag": etag,
-				"Content-Length": stat.size};
+				};
 
 			// don't cache htmls, they're not that big and it's easier to edit them on production
 			// Note: Should consider to remove on a real production environemnt
@@ -376,39 +404,7 @@ CallContext.prototype.getRequestedFile = function() {
 				return;
 			}
 			
-			
-			/* TODO:REVIEW
-			+			
-			+			This is not the correct way to send files in an evented framework.
-			+			Also - it does not deflate files
-			+			
-			+			One option is- 
-			+			
-			+			 var readStream = fileSystem.createReadStream(filePath);
-			+			    readStream.on('data', function(data) {
-			+			        response.write(data);
-			+			    });
-			+			    
-			+			    readStream.on('end', function() {
-			+			        response.end();        
-			+			    });
-			+			    
-			+			 Another option (THE PREFERRED WAY) - pipe the fs to the response. This way, you could also add 
-			+			 a deflate or a gzip in the pipeline
-			+			 
-			+			 See - http://nodejs.org/api/zlib.html#zlib_class_zlib_inflate
-			+			
-			+			*/
-
-			// Read the file and send the result
-			fs.readFile(me.filename, "binary", function(err, file) {
-				if (err) {			
-					logger.error("Failed sending file (" + me.uri + ") to client. Error: " + err);  
-					me.respondText(500, "500 Internal Server Serror: Error reading file\n");
-				} else {
-					me.respondBinary(200, file, responseHeaders);
-				}
-			});
+			me.respondFile(200, responseHeaders);
 		});
 	});
 };
