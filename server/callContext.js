@@ -8,7 +8,7 @@ var path = require("path");
 var util = require("util");
 var staticDir = path.normalize(__dirname + '/../static');
 var logger = require("./logger.js");
-var urlUtils = require("./url-utils.js");
+var urlUtils = require("./url-util.js");
 
 // Constructor for each client call. This object is passed as a token between most functions
 function CallContext(req, res) {

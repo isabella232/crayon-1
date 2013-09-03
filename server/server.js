@@ -58,7 +58,7 @@ var pluginManager = new (require("./pluginManager.js").PluginManager)(logger,con
 var JobManager = require("./jobManager.js").JobManager;
 var mail = require("./crayonMail.js");
 var rabbitmq = require("./rabbitmq-util.js");
-var urlUtils = require("./url-utils.js");
+var urlUtils = require("./url-util.js");
 
 
 measurements.setContextLib(contextLib);

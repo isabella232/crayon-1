@@ -4,7 +4,7 @@ var dates = require("./dates.js");
 var prototypes = require("./prototypes.js");
 var countersLib = require("./counter.js");
 var fs = require('fs');
-var urlUtils = require("./url-utils.js");
+var urlUtils = require("./url-util.js");
 var path = require("path");
 
 var staticDir = path.normalize(__dirname + '/../static');
