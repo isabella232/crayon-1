@@ -299,14 +299,21 @@ var mimeTypes = {
 		".png": "image/png", 
 		".css": "text/css"
 };
+var defaultMimeType = "application/octet-stream";
 
 // Get the proper mime type for our files (we don't use that many in our server)
 var getEndingContentType = function(filename){
-	var ext = path.extname(filename);
-	var rt = mimeTypes[ext];
-	if (typeof rt != "string")
-		return null;
-	return rt;
+	try {
+		var ext = path.extname(filename);
+		var rt = mimeTypes[ext];
+		if (typeof rt != "string")
+			return defaultMimeType;
+		return rt;
+	}
+	catch (ex) {
+		logger.error("could not extract mime type from "+filename+", "+ex);
+		return defaultMimeType;
+	}
 };
 
 // Serve the file requested with support for 304 not modified
