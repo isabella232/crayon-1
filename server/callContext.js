@@ -5,6 +5,7 @@ var zlib = require('zlib');
 var countersLib = require("./counter.js");
 var configLib = require("./configuration.js");
 var path = require("path");
+var util = require("util");
 var staticDir = path.normalize(__dirname + '/../static');
 var logger = require("./logger.js");
 var urlUtils = require("./url-utils.js");
@@ -18,15 +19,15 @@ function CallContext(req, res) {
 	me.startTime = new Date().getTime();
 	me.args = {};
 	
-	if (req.connection && req.connection.remoteAddress && req.connection.remoteAddress != "127.0.0.1") {
+	if (req.connection && req.connection.remoteAddress ) {
 		me.remoteIP = req.connection.remoteAddress;
-	} else if (req.socket && req.socket.remoteAddress && req.socket.remoteAddress != "127.0.0.1") {
+	} else if (req.socket && req.socket.remoteAddress ) {
 		me.remoteIP = req.socket.remoteAddress;
 	} else if (req.headers && req.headers["x-real-ip"]) {
 		me.remoteIP = req.headers["x-real-ip"];
 	}
 	else {
-		logger.warn("could not find remote IP address");
+		logger.warn("could not find remote IP address "+util.inspect(req));
 	}
 	
 
