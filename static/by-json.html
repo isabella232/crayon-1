@@ -200,10 +200,18 @@ var plotGraph = function(allGraphData, graph) {
 
 				if (cds.projection) {
 					try {
-						eval("function project(y,y2) { return (" + cds.projection + "); }");
+						eval("function project(y,y2,py,py2) { return (" + cds.projection + "); }");
+						var pdataPoint = {};
+						var pdataPoint2 = {};
+						var dataPoint = {};
+						var dataPoint2 = {};
 						for (time in byTime) {
-							var dataPoint = byTime[time];
-							var dataPoint2 = byTime2[time];
+							var dataPointCopy = {};
+							var dataPointCopy2 = {};
+							dataPoint = byTime[time];
+							dataPoint2 = byTime2[time];
+							for (var f in dataPoint) dataPointCopy[f] = dataPoint[f];
+							for (var f in dataPoint2) dataPointCopy2[f] = dataPoint2[f];
 
 							var ms = dataPoint.t.getTime() - minMs;
 							var s = (ms / 1000);
@@ -213,10 +221,12 @@ var plotGraph = function(allGraphData, graph) {
 							var w = (d / 7);
 							var M = (d / 31);
 
-							dataPoint.A = project(dataPoint.A,dataPoint2.A);
-							dataPoint.S = project(dataPoint.S,dataPoint2.S);
-							dataPoint.M = project(dataPoint.M,dataPoint2.M);
-							dataPoint.m = project(dataPoint.m,dataPoint2.m);
+							dataPoint.A = project(dataPoint.A,dataPoint2.A,pdataPoint.A,pdataPoint2.A);
+							dataPoint.S = project(dataPoint.S,dataPoint2.S,pdataPoint.S,pdataPoint2.S);
+							dataPoint.M = project(dataPoint.M,dataPoint2.M,pdataPoint.M,pdataPoint2.M);
+							dataPoint.m = project(dataPoint.m,dataPoint2.m,pdataPoint.m,pdataPoint2.m);
+							pdataPoint = dataPointCopy;
+							pdataPoint2 = dataPointCopy2;
 						}
 					} catch (ex) {
 						console.error("Failed parsing projection '" + cds.projection + "': " + ex);
